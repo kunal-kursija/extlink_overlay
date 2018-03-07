@@ -1,0 +1,11 @@
+drupal.extlink_overlay:
+  version: VERSION
+  js:
+    js/extlink_overlay.js: {}
+  css:
+    theme:
+      css/extlink_overlay.css: { every_page: 1 }
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings

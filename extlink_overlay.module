@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * @file
+ * Provides a admin page to manage overlay behavior and add js and css
+ * files on drupal bootstrap.
+ */
+
+use \Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_page_attachments().
+ */
+function extlink_overlay_page_attachments(array &$attachments) {
+  // If overlay settings are configured.
+  if (extlink_overlay_get_config_value() == '_blank') {
+    // Add library.
+    $attachments['#attached']['library'][] = 'extlink_overlay/drupal.extlink_overlay';
+    // Add Settings.
+    $attachments['#attached']['drupalSettings']['extlink_overlay']['extOverlayPopUp'] = '_blank';
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function extlink_overlay_form_extlink_admin_settings_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Add Configuration Checkbox.
+  $form['extlink_overlay_popup'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Open external links in a pop-up'),
+    '#return_value' => '_blank',
+    '#default_value' => extlink_overlay_get_config_value(),
+    '#description' => t('Should all external links be opened in a pop-up?'),
+  );
+  // Add submit handler to update the value of config variable.
+  $form['#submit'][] = 'extlink_overlay_form_extlink_admin_settings_alter_submit';
+}
+
+/**
+ * Helper function to get extlink_overlay configuration.
+ *
+ * @return int
+ *   Returns Int.
+ */
+function extlink_overlay_get_config_value() {
+  // Get config.
+  $extlink_overlay_config = \Drupal::config('extlink_overlay.settings');
+  // Get value from config.
+  $extlink_overlay_value = $extlink_overlay_config->get('extlink_overlay_popup');
+  // Return config value.
+  return $extlink_overlay_value;
+}
+
+/**
+ * Implements submit handler to save configurations.
+ */
+function extlink_overlay_form_extlink_admin_settings_alter_submit($form, FormStateInterface $form_state) {
+  // Get Form State Submitted Values.
+  $form_state_values = $form_state->getValues();
+  // Save the value to config factory.
+  \Drupal::configFactory()->getEditable('extlink_overlay.settings')
+    ->set('extlink_overlay_popup', $form_state_values['extlink_overlay_popup'])
+    ->save();
+}

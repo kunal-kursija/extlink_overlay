@@ -1,0 +1,15 @@
+{
+    "name": "drupal/extlink_overlay",
+    "description": "Opens external links in overlay.",
+    "type": "drupal-module",
+    "homepage": "https://www.drupal.org/project/extlink_overlay",
+    "authors": [
+        {
+            "name": "Basant Sharma"
+        }
+    ],
+    "support": {
+        "issues": "https://www.drupal.org/project/issues/extlink_overlay"
+    },
+    "license": "GPL-2.0"
+}
